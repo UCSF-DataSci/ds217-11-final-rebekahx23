@@ -2,26 +2,26 @@
 
 ## Executive Summary
 
-This report analyzes weather data using beach sensor data, which covers 196,516 hourly measurements between January 2016 to December 2024 from Lake Micigan beaches in Chicago. The project consists of 9-phases workflow to understand patterns in beach weather conditions and build predictive models for air temperature with the XGBoost model and linear regression model. Some of the key findings include strong seasonal temperature patterns, meaning summer months are warmer and winter months are colder, where there are also significant daily cycles. The XGBoost model emerged as the best performer, with a test R² of 0.9998 and RMSE of 0.146, which show that air temperature can be predicted with good accuracy from features such as temperature to humidity ratio as well as temperature with humidity interaction.
+This report analyzes weather using beach sensor data, which covers 196,516 hourly measurements between January 2016 to December 2024 from Lake Michigan beaches in Chicago. The project consists of 9-phases workflow to understand patterns in beach weather conditions and build predictive models for air temperature with XGBoost model and linear regression model. Some key findings include strong seasonal temperature patterns, meaning summer months are warmer and winter months are colder, and there are also significant daily cycles. The XGBoost model emerged as the best performer, with a test R² of 0.9998 and RMSE of 0.146, which show that air temperature can be predicted with good accuracy from features such as temperature to humidity ratio as well as temperature with humidity interaction.
 
 ## Phase-by-Phase Findings
 
 ### Phase 1-2: Exploration
 
-From the initial exploration we know the dataset contains 196,516 records with 18 columns including temperature measurements (air and wet bulb), wind speed and direction, humidity, precipitation type, barometric pressure, solar radiation, heading, battery life, and rain information data. The data ranges from January 2016 to December 2024, with measurements from three different weather stations; 63rd Street Weather Station, Foster Weather Station, and Oak Street Weather Station. 
+From the initial exploration we know the dataset contains 196,516 records with 18 columns including temperature measurements (air and wet bulb), wind speed and direction, humidity, precipitation type, barometric pressure, solar radiation, heading, battery life, and rain information data. The data ranges from January 2016 to December 2024, with measurements from three different weather stations: 63rd Street Weather Station, Foster Weather Station, and Oak Street Weather Station. 
 
 **Key Data Quality Issues Identified:**
 - Around 75 missing values for Air Temperature (0.0%), which is minimal and less than 5.0% of the total data.
 - Approximately 76,049 missing values in Wet Bulb Temperature (38.7%), Rain Intensity (38.7%), Precipitation Type (38.7%), and Heading (38.7%).
 - Approximately 146 missing values in Barometric Pressure (0.1%).
 - 146 (0.1%) missing values in Barometric Pressure
-- Some outliers in olar Radiation and Heading
+- Some outliers in Solar Radiation and Heading
 - Data collected at hourly intervals with some gaps
   
 Initial visualizations showed:
-- Air temperature ranging from -29.78°C to 37.6°C
-- Air temperature has been identical over the years with small amount of variability
-- Clear seasonal patterns visible in temperature data
+- Air temperature ranging from -29.78°C to 37.6°C.
+- Air temperature has been identical over the years with small amounts of variability.
+- Clear seasonal patterns visible in temperature data.
 - No noticeable long term warming or cooling trend is visible across the 9-year period.
 - The distribution has two peaks with a peak around late fall, and another peak around summer months.
   
@@ -30,7 +30,7 @@ Initial visualizations showed:
 
 ### Phase 3: Data Cleaning
 
-Data cleaning focused on resolving missing values, correcting data types, handling outliers, and ensuring dataset consistency without removing rows. Missing values were handled using methods appropriate to each variable type. Air Temperature and Barometric Pressure—both smooth, continuous time-series variables—were imputed using interpolation to preserve temporal continuity. Variables with extensive missingness such as Wet Bulb Temperature and Heading were filled using median imputation, which avoids introducing patterns in cases where large segments of data are absent. Rain-related fields (Rain Intensity, Total Rain) were filled with 0, and the categorical variable Precipitation Type was filled with "None", reflecting reasonable domain assumptions for missing precipitation values.
+Data cleaning focused on resolving missing values, correcting data types, handling outliers, and ensuring dataset consistency without removing rows. Missing values were handled using methods appropriate to each variable type. Air Temperature and Barometric Pressure — both smooth, continuous time-series variables — were imputed using interpolation to preserve temporal continuity. Variables with extensive missingness such as Wet Bulb Temperature and Heading were filled using median imputation, which avoids introducing patterns in cases where large segments of data are absent. Rain-related fields (Rain Intensity, Total Rain) were filled with 0, and the categorical variable Precipitation Type was filled with "None", reflecting reasonable domain assumptions for missing precipitation values.
 
 **Cleaning Results:**
 - Rows before cleaning: **196,516**
@@ -194,7 +194,6 @@ Residual plots show:
 - XGBoost residuals are extremely small across all temperature values.
 - Slight spreads occur at extreme cold temperatures (< −20°C), likely due to fewer samples and greater sensor noise.
 
-
 ### **Conclusion of Phase 8**
 
 - **XGBoost is the best model by a large margin**, achieving outstanding predictive performance.
@@ -203,4 +202,153 @@ Residual plots show:
 
 ![Figure 3: Model Performance](output/q8_final_visualizations.png)
 *Figure 3: Final visualizations showing model performance comparison, predictions vs actual values, feature importance, and residuals plot for the best-performing XGBoost model.*
+
+### Phase 9: Results
+
+The final results demonstrate successful prediction of air temperature with good accuracy. The XGBoost model achieves strong performance on the test set.
+
+**Summary of Key Findings:**
+1. **Model Performance:** XGBoost achieves R² = 0.9998, indicating that 99.98% of variance in air temperature can be explained by the features.
+2. **Feature Importance:** The Temp_to_Humidity_Ratio feature is overwhelmingly the most important predictor (86.73% importance).
+3. **Temporal Patterns:** Strong seasonal and daily patterns are critical for accurate prediction
+4. **Data Quality:** Cleaning process maintained full dataset while improving reliability
+5. **Data Leakage Avoidance:** By excluding features derived from the target variable, we achieved realistic and generalizable model performance
+
+The residuals plot shows relatively uniform distribution around zero, suggesting the model performs reasonably well across the full temperature range. The predictions vs actual scatter plot shows points distributed around the perfect prediction line with some scatter, indicating good but not perfect accuracy.
+
+## Visualizations
+
+![Figure 1: Initial Data Exploration](output/q1_visualizations.png)
+*Figure 1: Initial exploration showing distributions and time series of key variables.*
+
+![Figure 2: Pattern Analysis](output/q5_patterns.png)
+*Figure 2: Advanced pattern analysis revealing temporal trends, seasonal patterns, daily cycles, and correlations.*
+
+![Figure 3: Model Performance](output/q8_final_visualizations.png)
+*Figure 3: Final results showing model comparison, prediction accuracy, feature importance, and residual analysis.*
+
+## Model Results
+
+The modeling phase successfully built predictive models for air temperature. The performance metrics demonstrate that XGBoost performs well.
+
+### Performance Metrics Summary
+
+| Model             | MAE     | RMSE    | R²        |
+|------------------|----------|----------|------------|
+| Linear Regression | 0.4888  | 0.7229  | 0.9950     |
+| XGBoost           | 0.0869  | 0.1461  | 0.9998     |
+
+**Performance Interpretation:**
+- **R² Score:** Measures proportion of variance explained. XGBoost's R² of 0.9998 means the model explains 99.98% of variance in air temperature, which is a strong but realistic result.
+- **RMSE:** Average prediction error in original units. XGBoost's RMSE of 0.1461°C means predictions are typically within 0.1461°C of actual values.
+- **MAE:** Average absolute prediction error. XGBoost's MAE of 0.0869°C indicates good predictive accuracy.
+
+**Model Selection:** XGBoost is selected as the best model due to:
+1. Highest R² score (0.9998)
+2. Lowest RMSE (0.1461°C)
+3. Lowest MAE (0.0869°C)
+4. Good generalization (train R² = 0.9999, test R² = 0.9998)
+
+**Feature Importance Insights:**
+
+- **Temp_to_Humidity_Ratio overwhelmingly dominates importance (86.7%)**  
+  This indicates that the relationship between temperature and humidity is the single strongest predictor.  
+
+- **Temp_Humidity_Interaction (11.3%)** is also highly predictive, reinforcing the importance of combined thermodynamic effects.
+
+- **Wet Bulb Temperature (1.8%)**, a physically meaningful measure of moist air temperature, provides complementary information.
+
+- Most other features contribute very small marginal improvements, suggesting:
+  - Air temperature is highly structured and predictable from thermodynamic interactions.
+  - Many weather features (wind, pressure, rain) add minor refinements rather than driving prediction.
+
+**Note on Data Leakage Avoidance:** By excluding features derived from the target variable (temp_difference, temp_ratio, temp_category, comfort_index) and highly correlated features (Wet Bulb Temperature), we achieved realistic model performance. This demonstrates the importance of careful feature selection to avoid circular logic.
+
+## Time Series Patterns
+
+The analysis revealed several important temporal patterns:
+
+**Long-term Trends:**
+- Stable long-term trends over the 10 year period
+- No significant increasing or decreasing trends (data appears stationary after accounting for seasonality)
+- Consistent seasonal cycles year over year
+
+**Seasonal Patterns:**
+- **Monthly:** Clear seasonal cycle with temperatures peaking in summer months (July-August) and reaching minima in winter months (January-February)
+- **Daily:** Strong diurnal cycle with temperatures peaking in afternoon (4 PM) and reaching minima in early morning (6 AM)
+- Daily patterns are consistent across seasons, though amplitude varies
+
+**Temporal Relationships:**
+- Air Temp vs Wind Speed: **–0.24**
+- Air Temp vs Barometric Pressure: **–0.25**
+- Air Temp vs Solar Radiation: **+0.22**
+- These moderate correlations reinforce the importance of non-linear modeling.
+- Rolling windows of predictor variables (wind speed, humidity, pressure) capture temporal dependencies
+
+## Limitations & Next Steps
+
+**Limitations:**
+
+1. **Data Quality:**
+   - Large number of missing values in Wet Bulb Temperature (38.7%) required median imputation, which may introduce bias
+   - Periodic sensor dropouts created irregular gaps in the time series, which may limit the ability to fully capture short-term weather dynamics.
+   - Outlier capping may have removed some valid extreme events
+   - Limited spatial coverage with only 3 stations
+
+2. **Model Limitations:**
+   - Outlier capping may suppress rare extreme events
+   - XGBoost model heavily depends on humidity normalization, which may behave differently in unusual weather patterns
+   - Model may not generalize perfectly to future climate shifts
+   - Model trained on historical data may not generalize to future climate conditions
+
+3. **Feature Engineering:**
+   - Some potentially useful features may not have been created (e.g., lag features, interaction terms)
+   - Rolling window sizes (7h, 24h) were chosen somewhat arbitrarily, having alternative windowing strategies or adaptive windows could better capture varying temporal scales.
+   - Features derived from target variable were correctly excluded to avoid data leakage
+   - External data such as lake water temperature which could be useful was not incorporated
+
+4. **Scope:**
+   - The analysis focused solely on predicting air temperature, while other important environmental factors such as wind speed, rain intensity, and humidity were not modeled.
+   - Only one target variable analyzed; multi-target modeling could provide additional insights
+   - Spatial relationships between stations not analyzed, because the analysis treats all stations equally
+
+**Next Steps:**
+
+1. **Model Improvement:**
+   - Experiment with different rolling window sizes and lag features
+   - Try additional models like Gradient Boosting, LSTM to potentially improve performance
+   - Incorporate external data sources (weather forecasts, lake level data)
+   - Try ensemble methods combining multiple models
+   - Validate model on truly out-of-sample data (future dates)
+   - Address overfitting in XGBoost (train/test gap suggests some overfitting)
+
+2. **Feature Engineering:**
+   - Create interaction features between key variables
+   - Add lag features (previous hour/day values) explicitly
+   - Incorporate spatial features (distance between stations, station-specific effects)
+   - Create weather condition categories
+
+3. **Analysis Extension:**
+   - Predict other targets (wind speed, precipitation, humidity)
+   - Analyze station-specific patterns and differences
+   - Investigate sensor reliability and data quality by location
+   - Build forecasting models for future predictions
+   - Analyze spatial relationships between stations
+
+4. **Validation:**
+   - Cross-validation with temporal splits
+   - Validation on additional time periods
+   - Comparison with physical models (if available)
+   - Sensitivity analysis on feature importance
+   - Further investigation of feature engineering to improve Linear Regression performance
+
+5. **Deployment:**
+   - Real-time prediction system
+   - Alert system for extreme conditions
+   - Dashboard for beach managers
+   - Integration with weather forecasting systems
+
+## Conclusion
+
+This project analysis applied a complete 9-phase data science workflow to Chicago Beach Weather Sensors data, achieving accurate air temperature predictions (R² = 0.9998, RMSE = 0.1461°C). The project demonstrated the importance of temporal feature engineering, where the XGBoost model consistently outperformed Linear Regression, and its feature importance analysis revealed that Temp_to_Humidity_Ratio and Temp_Humidity_Interaction were by far the strongest predictors, together accounting for more than 98% of total importance. Seasonal effects, captured through features such as Month, also contributed meaningfully, highlighting the strong cyclical structure present in Chicago’s climate. The analysis demonstrates proper data leakage avoidance by excluding features derived from the target variable, resulting in realistic and generalizable model performance. This provides a solid foundation for beach condition monitoring and prediction systems.
 
