@@ -1,0 +1,118 @@
+Rows before cleaning: 196516
+
+Missing Data Handling:
+- Air Temperature: 75 missing values (0.04%)
+  Method: Interpolation
+  Result: All missing values filled
+
+- Wet Bulb Temperature: 76049 missing values (38.70%)
+  Method: Median imputation
+  Result: All missing values filled
+
+- Rain Intensity: 76049 missing values (38.70%)
+  Method: Filled with 0
+  Result: All missing values filled
+
+- Total Rain: 76049 missing values (38.70%)
+  Method: Filled with 0
+  Result: All missing values filled
+
+- Precipitation Type: 76049 missing values (38.70%)
+  Method: Filled with 'None'
+  Result: All missing values filled
+
+- Barometric Pressure: 146 missing values (0.07%)
+  Method: Interpolation
+  Result: All missing values filled
+
+- Heading: 76049 missing values (38.70%)
+  Method: Median imputation
+  Result: All missing values filled
+
+Outlier Handling:
+Detection method: IQR (1.5 × IQR rule)
+
+- Air Temperature: 97 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [-21.50, 47.30]
+  Result: 97 values capped
+
+- Wet Bulb Temperature: 88 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [-20.10, 41.50]
+  Result: 88 values capped
+
+- Humidity: 185 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [22.50, 114.50]
+  Result: 185 values capped
+
+- Rain Intensity: 4250 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [0.00, 0.00]
+  Result: 4250 values capped
+
+- Interval Rain: 15862 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [0.00, 0.00]
+  Result: 15862 values capped
+
+- Total Rain: 9507 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [-259.00, 476.20]
+  Result: 9507 values capped
+
+- Wind Direction: 0 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [-365.00, 635.00]
+  Result: 0 values capped
+
+- Wind Speed: 12225 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [-0.95, 5.85]
+  Result: 12225 values capped
+
+- Maximum Wind Speed: 4024 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [-4.80, 11.20]
+  Result: 4024 values capped
+
+- Barometric Pressure: 4611 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [977.60, 1011.20]
+  Result: 4611 values capped
+
+- Solar Radiation: 29488 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [-196.50, 327.50]
+  Result: 29488 values capped
+
+- Heading: 27175 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [339.50, 367.50]
+  Result: 27175 values capped
+
+- Battery Life: 6 outliers detected
+  Method: Capped at IQR bounds
+  Bounds: [7.10, 19.90]
+  Result: 6 values capped
+
+Duplicates Removed: 0
+
+Data Type Conversions:
+- Measurement Timestamp → datetime64[ns]
+- Air Temperature → numeric
+- Wet Bulb Temperature → numeric
+- Humidity → numeric
+- Rain Intensity → numeric
+- Interval Rain → numeric
+- Total Rain → numeric
+- Wind Direction → numeric
+- Wind Speed → numeric
+- Maximum Wind Speed → numeric
+- Barometric Pressure → numeric
+- Solar Radiation → numeric
+- Heading → numeric
+- Battery Life → numeric
+
+Rows after cleaning: 196516

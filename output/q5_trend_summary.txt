@@ -1,0 +1,16 @@
+KEY PATTERNS IDENTIFIED
+======================
+TEMPORAL TRENDS:
+- Air temperature shows clear seasonal patterns
+- Higher temperatures in summer months (June-August)
+- Lower temperatures in winter months (December-February)
+
+DAILY PATTERNS:
+- Air Temperature shows diurnal cycle (warmer during day, cooler at night)
+- Peak air temp typically at hour 16 (4 PM)
+- Minimum air temp typically at hour 6 (6 AM)
+
+CORRELATIONS:
+- Air Temp vs Barometric Pressure: -0.25 (moderate negative correlation)
+- Air Temp vs Wind Speed: -0.24 (moderate negative correlation)
+- Air Temp vs Solar Radiation: 0.22 (moderate positive correlation)

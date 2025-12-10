@@ -1,0 +1,22 @@
+feature,importance
+Temp_to_Humidity_Ratio,0.8673362
+Temp_Humidity_Interaction,0.11273011
+Wet Bulb Temperature,0.018017491
+Battery Life,0.001080367
+Humidity,0.0002805153
+Total Rain,0.00014602103
+DayOfWeek,8.455789e-05
+Maximum Wind Speed,7.6808996e-05
+Wind Speed,4.5165438e-05
+Solar Radiation,4.2558782e-05
+Barometric Pressure,4.0660772e-05
+Wind Direction,4.0343493e-05
+Month,3.626216e-05
+Hour,2.9856545e-05
+Wind_Solar_Interaction,7.202641e-06
+Heading,5.921207e-06
+IsNight,0.0
+IsWeekend,0.0
+Interval Rain,0.0
+Rain Intensity,0.0
+IsRaining,0.0
