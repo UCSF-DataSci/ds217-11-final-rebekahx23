@@ -83,3 +83,124 @@ Time-based rolling windows were added to capture short-term temporal smoothing:
 - `wind_speed_rolling_7h`: 7-hour rolling mean of wind speed
 - `humidity_rolling_24h`: 24-hour rolling mean of humidity
 - `pressure_rolling_7h`: 7-hour rolling mean of barometric pressure
+
+
+### Phase 6: Pattern Analysis
+
+Pattern analysis revealed several important temporal and correlational patterns:
+
+
+#### **Seasonal Patterns**  
+Long-term patterns show seasonal cycles in air temperature:
+
+- Air temperatures reaches peak during summer months (June–August), often exceeding 25–30°C.  
+- Temperatures drop during winter months (December–February), frequently falling below freezing.  
+- Humidity remains relatively high all year round but fluctuates more irregularly.
+
+These seasonal trends shows the strong annual climate variation typical of Chicago and demonstrate why temporal features are critical for prediction.
+
+#### **Daily Patterns**  
+- **Minimum temperature** occurs around 6 AM, shortly before sunrise.  
+- **Maximum temperature** occurs around 4 PM, lagging the peak in solar radiation due to land heat absorption.  
+- This cycle repeats reliably throughout the full 10-year record.
+
+#### **Correlation Patterns**  
+The correlation heatmap highlights the linear relationships between key environmental variables:
+
+- **Air Temperature vs Barometric Pressure: -0.25**  
+  Moderate negative correlation; cooler conditions often follow drops in pressure.
+
+- **Air Temperature vs Wind Speed: -0.24**  
+  Windy conditions tend to coincide with slightly cooler temperatures near the lake.
+
+- **Air Temperature vs Solar Radiation: 0.22**  
+  As expected, sunnier conditions contribute to higher temperatures.
+
+- **Air Temperature vs Humidity: 0.01**  
+  Nearly no linear relationship; humidity does not meaningfully co-vary with temperature in this dataset.
+
+These correlations suggest that pressure, wind, and solar radiation provide useful signals for modeling air temperature, while humidity contributes very little predictive value.
+
+![Figure 2: Pattern Analysis](output/q5_patterns.png)
+*Figure 2: Advanced pattern analysis showing monthly temperature trends, seasonal patterns by month, daily patterns by hour, and correlation heatmap of key variables.*
+
+### Phase 7: Modeling Preparation
+
+Modeling preparation involved selecting a target variable, performing temporal train/test splitting, and preparing features. Air temperature was chosen as the target variable, as it's a key indicator of beach conditions and shows predictable patterns.
+
+**Temporal Train/Test Split:**
+- Split method: Temporal (80/20 split by time, NOT random)
+- Training set: **157,212 samples** (earlier data: April 2015 to ~July 2023)
+- Test set: **39,304 samples** (later data: ~July 2023 to December 2025)
+- Rationale: Time series data requires temporal splitting to avoid data leakage and ensure realistic evaluation
+
+**Feature Preparation:**
+- Target variable:
+  - `Air Temperature`
+- Feature set constructed from:
+  - **Original sensor variables:**
+    - `Wet Bulb Temperature`, `Humidity`, `Rain Intensity`, `Interval Rain`, `Total Rain`
+    - `Wind Direction`, `Wind Speed`, `Maximum Wind Speed`
+    - `Barometric Pressure`, `Solar Radiation`, `Heading`, `Battery Life`
+  - **Temporal features:**
+    - `Hour`, `DayOfWeek`, `Month`, `IsWeekend`, `IsNight`
+  - **Ratio and interaction features:**
+    - `Temp_to_Humidity_Ratio`, `Temp_Humidity_Interaction`, `Wind_Solar_Interaction`
+  - **Binary indicator:**
+    - `IsRaining`
+- Only features present in the training data were used (`available_features` filter), ensuring consistency between train and test sets.
+- Non-numeric identifiers such as **Station Name** and other non-predictive IDs were excluded from the feature matrix.
+- Data leakage checks:
+  - Verified that features derived directly from the target were **not** included in the final modeling feature list.
+  - Confirmed that the temporal split uses only **past data for training** and **future data for testing**.
+- Resulting modeling matrices:
+  - `X_train`, `y_train` built from earlier (pre–split date) observations
+  - `X_test`, `y_test` built from later (post–split date) observations
+  - `X_test` saved as `output/q6_X_test.csv` with no index column.
+
+Overall, Phase 7 produced a clean, temporally valid modeling dataset where all features are predictors only, the target is clearly defined, and evaluation is performed on unseen future data to mimic a realistic forecasting scenario.
+
+### Phase 8: Modeling
+
+In this phase, two predictive models were trained and evaluated: Linear Regression (a baseline model) and XGBoost (a nonlinear gradient boosting model). The goal was to forecast Air Temperature using features.
+
+Both models were trained on the temporally split training set and evaluated on the held-out future test set to ensure no data leakage.
+
+#### **Model Performance**
+
+The following table summarizes performance metrics (MAE, RMSE, R²) for both models:
+
+| Model             | MAE   | RMSE  | R²     |
+|------------------|--------|--------|---------|
+| Linear Regression | 0.489  | 0.723 | 0.9950 |
+| XGBoost           | 0.087  | 0.146 | 0.9998 |
+
+**Key Findings:**
+
+- **Linear Regression** performed reasonably well (Test R² ≈ **0.9950**), suggesting strong linear structure in the data.
+- **XGBoost achieved near-perfect accuracy**, with Test R² ≈ **0.9998**, reducing MAE by nearly **6×** and RMSE by **5×** compared to Linear Regression.
+- The extremely strong performance of XGBoost reflects its ability to capture non-linear relationships and complex interactions that Linear Regression cannot model.
+
+
+#### **Actual vs Predicted**
+
+Visual inspection confirms that XGBoost predictions closely follow the 45° perfect prediction line, indicating minimal bias across the temperature range. Linear Regression, while accurate, shows more dispersion at extreme temperature values.
+
+#### **Residual Analysis**
+
+Residual plots show:
+
+- Errors are centered around zero with no visible bias.
+- XGBoost residuals are extremely small across all temperature values.
+- Slight spreads occur at extreme cold temperatures (< −20°C), likely due to fewer samples and greater sensor noise.
+
+
+### **Conclusion of Phase 8**
+
+- **XGBoost is the best model by a large margin**, achieving outstanding predictive performance.
+- Nonlinear interactions between temperature and humidity were the most informative predictors.
+- The model generalizes extremely well to future data, indicating strong temporal consistency in feature relationships.
+
+![Figure 3: Model Performance](output/q8_final_visualizations.png)
+*Figure 3: Final visualizations showing model performance comparison, predictions vs actual values, feature importance, and residuals plot for the best-performing XGBoost model.*
+
