@@ -270,13 +270,13 @@ The analysis revealed several important temporal patterns:
 
 **Long-term Trends:**
 - Stable long-term trends over the 10 year period
-- No significant increasing or decreasing trends (data appears stationary after accounting for seasonality)
-- Consistent seasonal cycles year over year
+- No significant increasing or decreasing trends, data seems to be predictable
+- Consistent seasonal cycles year over year with some variability
 
 **Seasonal Patterns:**
-- **Monthly:** Clear seasonal cycle with temperatures peaking in summer months (July-August) and reaching minima in winter months (January-February)
-- **Daily:** Strong diurnal cycle with temperatures peaking in afternoon (4 PM) and reaching minima in early morning (6 AM)
-- Daily patterns are consistent across seasons, though amplitude varies
+- **Monthly:** Obvious seasonal cycle with temperatures peaking during summer months (July-August) and reaching the lowest temperatures during winter months (January-February)
+- **Daily:** Temperatures peaking in afternoon (4 PM) and reaching minima in early morning (6 AM)
+- Daily patterns are consistent accross different seasons, though the fluctuations varies
 
 **Temporal Relationships:**
 - Air Temp vs Wind Speed: **–0.24**
@@ -292,7 +292,7 @@ The analysis revealed several important temporal patterns:
 1. **Data Quality:**
    - Large number of missing values in Wet Bulb Temperature (38.7%) required median imputation, which may introduce bias
    - Periodic sensor dropouts created irregular gaps in the time series, which may limit the ability to fully capture short-term weather dynamics.
-   - Outlier capping may have removed some valid extreme events
+   - Outlier capping may have removed some valid extreme events, especially for during heatwaves where the tail behavior is meaningful
    - Limited spatial coverage with only 3 stations
 
 2. **Model Limitations:**
@@ -304,8 +304,9 @@ The analysis revealed several important temporal patterns:
 3. **Feature Engineering:**
    - Some potentially useful features may not have been created (e.g., lag features, interaction terms)
    - Rolling window sizes (7h, 24h) were chosen somewhat arbitrarily, having alternative windowing strategies or adaptive windows could better capture varying temporal scales.
-   - Features derived from target variable were correctly excluded to avoid data leakage
+   - Features derived from target variable were intentionally excluded to avoid data leakage
    - External data such as lake water temperature which could be useful was not incorporated
+   - Cyclical encodings by transforming with sine/cosine maybe preserve periodict structure and improve generalization
 
 4. **Scope:**
    - The analysis focused solely on predicting air temperature, while other important environmental factors such as wind speed, rain intensity, and humidity were not modeled.
@@ -316,7 +317,7 @@ The analysis revealed several important temporal patterns:
 
 1. **Model Improvement:**
    - Experiment with different rolling window sizes and lag features
-   - Try additional models like Gradient Boosting, LSTM to potentially improve performance
+   - Try additional models like Gradient Boosting, LSTM, Random Forest to potentially improve performance
    - Incorporate external data sources (weather forecasts, lake level data)
    - Try ensemble methods combining multiple models
    - Validate model on truly out-of-sample data (future dates)
@@ -326,7 +327,8 @@ The analysis revealed several important temporal patterns:
    - Create interaction features between key variables
    - Add lag features (previous hour/day values) explicitly
    - Incorporate spatial features (distance between stations, station-specific effects)
-   - Create weather condition categories
+   - Create weather condition categories to help model with location specific changes under different environmental states
+   - Explore cyclical encodings for time based features
 
 3. **Analysis Extension:**
    - Predict other targets (wind speed, precipitation, humidity)
@@ -339,16 +341,15 @@ The analysis revealed several important temporal patterns:
    - Cross-validation with temporal splits
    - Validation on additional time periods
    - Comparison with physical models (if available)
-   - Sensitivity analysis on feature importance
+   - Sensitivity analysis on feature importance to identify features that contributes to the significance
    - Further investigation of feature engineering to improve Linear Regression performance
 
 5. **Deployment:**
-   - Real-time prediction system
+   - Real-time prediction system based on real-time live sensor data
    - Alert system for extreme conditions
-   - Dashboard for beach managers
-   - Integration with weather forecasting systems
-
+   - Dashboard for beach managers to visualize current conditions while displaying risk indicators
+   - Integrate predictions with existing weather forecasting systems to support decision-making and public communication.
+  
 ## Conclusion
 
 This project analysis applied a complete 9-phase data science workflow to Chicago Beach Weather Sensors data, achieving accurate air temperature predictions (R² = 0.9998, RMSE = 0.1461°C). The project demonstrated the importance of temporal feature engineering, where the XGBoost model consistently outperformed Linear Regression, and its feature importance analysis revealed that Temp_to_Humidity_Ratio and Temp_Humidity_Interaction were by far the strongest predictors, together accounting for more than 98% of total importance. Seasonal effects, captured through features such as Month, also contributed meaningfully, highlighting the strong cyclical structure present in Chicago’s climate. The analysis demonstrates proper data leakage avoidance by excluding features derived from the target variable, resulting in realistic and generalizable model performance. This provides a solid foundation for beach condition monitoring and prediction systems.
-
